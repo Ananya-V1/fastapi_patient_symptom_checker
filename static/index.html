@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Symptom Checker</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="/static/css/style.css"/>
+  <style type="text/tailwindcss">
+    .btn-primary  { @apply bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors cursor-pointer; }
+    .btn-secondary{ @apply bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors cursor-pointer; }
+    .btn-danger   { @apply bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-700 transition-colors cursor-pointer; }
+    .input        { @apply w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent; }
+    .label        { @apply block text-xs font-medium text-gray-600 mb-1.5 uppercase tracking-wide; }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800 flex h-screen overflow-hidden">
+
+  <!-- ── Sidebar ─────────────────────────────────────────────────────────── -->
+  <aside class="w-56 bg-white border-r border-gray-200 flex flex-col fixed h-full z-10 shrink-0">
+    <div class="p-4 border-b border-gray-100">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center">
+          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+          </svg>
+        </div>
+        <div>
+          <p class="font-semibold text-gray-900 text-sm leading-tight">Symptom Checker</p>
+          <p class="text-xs text-gray-400">Medical Portal</p>
+        </div>
+      </div>
+    </div>
+
+    <nav class="flex-1 p-3 space-y-0.5">
+      <a href="#dashboard" class="nav-link" data-page="dashboard">
+        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+        </svg>
+        Dashboard
+      </a>
+      <a href="#patients" class="nav-link" data-page="patients">
+        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+        </svg>
+        Patients
+      </a>
+      <a href="#symptoms" class="nav-link" data-page="symptoms">
+        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+        </svg>
+        Symptoms Library
+      </a>
+    </nav>
+
+    <div class="p-4 border-t border-gray-100">
+      <a href="/docs" target="_blank"
+         class="flex items-center gap-2 text-xs text-gray-400 hover:text-gray-600 transition-colors">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+        </svg>
+        API Docs
+      </a>
+    </div>
+  </aside>
+
+  <!-- ── Main ───────────────────────────────────────────────────────────── -->
+  <div class="ml-56 flex-1 flex flex-col overflow-hidden min-w-0">
+    <header class="bg-white border-b border-gray-200 px-6 py-3.5 flex items-center justify-between shrink-0">
+      <h1 id="page-title" class="text-base font-semibold text-gray-900">Dashboard</h1>
+      <div id="header-actions" class="flex items-center gap-2"></div>
+    </header>
+    <main id="app" class="flex-1 overflow-y-auto p-6"></main>
+  </div>
+
+  <!-- ── Modal ──────────────────────────────────────────────────────────── -->
+  <div id="modal-overlay"
+       class="hidden fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+        <h3 id="modal-title" class="font-semibold text-gray-900 text-sm"></h3>
+        <button onclick="closeModal()"
+                class="text-gray-400 hover:text-gray-600 transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <div id="modal-body" class="p-5"></div>
+    </div>
+  </div>
+
+  <!-- ── Toasts ─────────────────────────────────────────────────────────── -->
+  <div id="toast-container" class="fixed bottom-5 right-5 flex flex-col gap-2 z-50 pointer-events-none"></div>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
